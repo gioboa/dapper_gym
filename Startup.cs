@@ -5,7 +5,6 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SpaServices.ReactDevelopmentServer;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Dapper.Samples.Basics;
 
 namespace test_dapper
 {
@@ -66,7 +65,7 @@ namespace test_dapper
         }
       });
 
-      dapperManager.getRows();
+      dapperManager.getMovies();
     }
   }
 }

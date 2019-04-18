@@ -3,35 +3,33 @@ import React, { Component } from 'react';
 export class FetchData extends Component {
   static displayName = FetchData.name;
 
-  constructor (props) {
+  constructor(props) {
     super(props);
     this.state = { forecasts: [], loading: true };
 
-    fetch('api/SampleData/WeatherForecasts')
+    fetch('api/DapperData/Movies')
       .then(response => response.json())
       .then(data => {
         this.setState({ forecasts: data, loading: false });
       });
   }
 
-  static renderForecastsTable (forecasts) {
+  static renderMoviesTable(forecasts) {
     return (
       <table className='table table-striped'>
         <thead>
           <tr>
-            <th>Date</th>
-            <th>Temp. (C)</th>
-            <th>Temp. (F)</th>
-            <th>Summary</th>
+            <th>Id</th>
+            <th>Name</th>
+            <th>Year</th>
           </tr>
         </thead>
         <tbody>
           {forecasts.map(forecast =>
-            <tr key={forecast.dateFormatted}>
-              <td>{forecast.dateFormatted}</td>
-              <td>{forecast.temperatureC}</td>
-              <td>{forecast.temperatureF}</td>
-              <td>{forecast.summary}</td>
+            <tr key={forecast.id}>
+              <td>{forecast.id}</td>
+              <td>{forecast.name}</td>
+              <td>{forecast.year}</td>
             </tr>
           )}
         </tbody>
@@ -39,14 +37,14 @@ export class FetchData extends Component {
     );
   }
 
-  render () {
+  render() {
     let contents = this.state.loading
       ? <p><em>Loading...</em></p>
-      : FetchData.renderForecastsTable(this.state.forecasts);
+      : FetchData.renderMoviesTable(this.state.forecasts);
 
     return (
       <div>
-        <h1>Weather forecast</h1>
+        <h1>Table Movies</h1>
         <p>This component demonstrates fetching data from the server.</p>
         {contents}
       </div>
