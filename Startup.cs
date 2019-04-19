@@ -26,11 +26,10 @@ namespace test_dapper
       {
         configuration.RootPath = "ClientApp/build";
       });
-      services.AddSingleton(typeof(IDapperManager), typeof(DapperManager));
     }
 
     // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-    public void Configure(IApplicationBuilder app, IHostingEnvironment env, IDapperManager dapperManager)
+    public void Configure(IApplicationBuilder app, IHostingEnvironment env)
     {
 
       if (env.IsDevelopment())
@@ -64,8 +63,6 @@ namespace test_dapper
           spa.UseReactDevelopmentServer(npmScript: "start");
         }
       });
-
-      dapperManager.getMovies();
     }
   }
 }
