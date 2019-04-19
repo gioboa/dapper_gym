@@ -5,16 +5,32 @@ export class FetchData extends Component {
 
   constructor(props) {
     super(props);
-    this.state = { forecasts: [], loading: true };
+    this.state = { movies: [], loading: true };
+    this.getAllMovies = this.getAllMovies.bind(this);
+    this.deleteMovie = this.deleteMovie.bind(this);
+  }
 
+  componentDidMount() {
+    this.getAllMovies();
+  }
+
+  getAllMovies() {
     fetch('api/Movies')
       .then(response => response.json())
       .then(data => {
-        this.setState({ forecasts: data, loading: false });
+        this.setState({ movies: data, loading: false });
       });
   }
 
-  static renderMoviesTable(forecasts) {
+  deleteMovie(id) {
+    const formData = new FormData();
+    return fetch(`api/Movies/${id}`, {
+      method: 'DELETE',
+      body: formData
+    }).then(() => this.getAllMovies());
+  }
+
+  renderMoviesTable(movies) {
     return (
       <table className='table table-striped'>
         <thead>
@@ -22,14 +38,16 @@ export class FetchData extends Component {
             <th>Id</th>
             <th>Name</th>
             <th>Year</th>
+            <th>Delete</th>
           </tr>
         </thead>
         <tbody>
-          {forecasts.map(forecast =>
-            <tr key={forecast.id}>
-              <td>{forecast.id}</td>
-              <td>{forecast.name}</td>
-              <td>{forecast.year}</td>
+          {movies.map(movie =>
+            <tr key={movie.id}>
+              <td>{movie.id}</td>
+              <td>{movie.name}</td>
+              <td>{movie.year}</td>
+              <td><button onClick={() => this.deleteMovie(movie.id)}>X</button></td>
             </tr>
           )}
         </tbody>
@@ -40,8 +58,7 @@ export class FetchData extends Component {
   render() {
     let contents = this.state.loading
       ? <p><em>Loading...</em></p>
-      : FetchData.renderMoviesTable(this.state.forecasts);
-
+      : this.renderMoviesTable(this.state.movies);
     return (
       <div>
         <h1>Table Movies</h1>
@@ -51,3 +68,4 @@ export class FetchData extends Component {
     );
   }
 }
+
