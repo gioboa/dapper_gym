@@ -5,9 +5,12 @@ export class FetchData extends Component {
 
   constructor(props) {
     super(props);
-    this.state = { movies: [], loading: true };
+    this.state = { movies: [], loading: true, newMovie: { name: '', year: '' } };
     this.getAllMovies = this.getAllMovies.bind(this);
     this.deleteMovie = this.deleteMovie.bind(this);
+    this.nameChange = this.nameChange.bind(this);
+    this.yearChange = this.yearChange.bind(this);
+    this.insertMovie = this.insertMovie.bind(this);
   }
 
   componentDidMount() {
@@ -18,7 +21,7 @@ export class FetchData extends Component {
     fetch('api/Movies')
       .then(response => response.json())
       .then(data => {
-        this.setState({ movies: data, loading: false });
+        this.setState({ ...this.state, movies: data, loading: false });
       });
   }
 
@@ -28,6 +31,28 @@ export class FetchData extends Component {
       method: 'DELETE',
       body: formData
     }).then(() => this.getAllMovies());
+  }
+
+  insertMovie(movie) {
+    return fetch(`api/Movies`, {
+      method: 'POST',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ ...movie })
+    }).then(() => {
+      this.state = { ...this.state, newMovie: { name: '', year: '' } };
+      this.getAllMovies()
+    });
+  }
+
+  nameChange(event) {
+    this.setState({ ...this.state, newMovie: { ...this.state.newMovie, name: event.target.value } });
+  }
+
+  yearChange(event) {
+    this.setState({ ...this.state, newMovie: { ...this.state.newMovie, year: event.target.value } });
   }
 
   renderMoviesTable(movies) {
@@ -50,6 +75,12 @@ export class FetchData extends Component {
               <td><button onClick={() => this.deleteMovie(movie.id)}>X</button></td>
             </tr>
           )}
+          <tr>
+            <td></td>
+            <td><input type="text" value={this.state.newMovie.name} onChange={this.nameChange} /> </td>
+            <td><input type="text" value={this.state.newMovie.year} onChange={this.yearChange} /> </td>
+            <td><button onClick={() => this.insertMovie(this.state.newMovie)}>+</button></td>
+          </tr>
         </tbody>
       </table>
     );
